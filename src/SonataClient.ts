@@ -34,6 +34,29 @@ export class SonataClient {
             })
     }
 
+    play(contextUri: string) {
+        const requestBody = {
+            "context_uri": contextUri
+        };
+
+        const requestDetails: RequestInit = {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${this.details.getOauth2AccessToken()}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        };
+
+        return fetch("http://localhost:8080/v1/player/play", requestDetails)
+            .then(resp => {
+                if (resp.status == 204) {
+                    return true;
+                }
+                return this.handleRequestError(resp);
+            })
+    }
+
     private handleRequestError(resp: Response) {
         return resp.json()
             .then(body => {
